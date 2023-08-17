@@ -1,5 +1,7 @@
 from redis import Redis
+from flask_sqlalchemy import SQLAlchemy
 
+db = SQLAlchemy()
 class RedisWrapper:
     def __init__(self):
         self.redis = None
