@@ -1,7 +1,7 @@
 import os
 from flask import Flask
 from flask_cors import CORS
-from .extensions import redis_wrapper
+from .extensions import redis_wrapper, db
 from app.api.demo.views import demo_blueprint
 from dotenv import load_dotenv
 
@@ -19,5 +19,6 @@ def create_app():
         port=os.getenv('REDIS_PORT'),
         decode_responses=True
     )
+    db.init_app(app)
 
     return app
