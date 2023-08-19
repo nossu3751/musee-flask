@@ -1,3 +1,4 @@
+import random
 import sys
 from datetime import datetime as dt
 sys.path.append(f'{sys.path[0]}/../..')
@@ -8,6 +9,7 @@ from app.extensions import db
 from app.models.demo.user import User
 from app.models.demo.artwork import Artwork
 from app.models.demo.verif_vote import VerifVote
+from app.api.demo.services import DemoService
 
 '''
 class VerifVote(db.Model):
@@ -23,23 +25,25 @@ class VerifVote(db.Model):
 '''
 
 def delete_all():
-    User.query.delete()
-    Artwork.query.delete()
     VerifVote.query.delete()
+    Artwork.query.delete()
+    User.query.delete()
+    
+    
     db.session.commit()
 
-def add_user(email, first_name, last_name):
+def add_user(id, email, first_name, last_name):
     try:
-        user = User(email=email, first_name=first_name, last_name=last_name)
+        user = User(id=id, email=email, first_name=first_name, last_name=last_name)
         db.session.add(user)
         db.session.commit()
     except Exception as e:
         db.session.rollback()
         traceback.print_exc()
 
-def add_artwork(uid, verified, actual_price, name, img_link):
+def add_artwork(id, uid, verified, actual_price, name, img_link):
     try:
-        artwork = Artwork(uid=uid, verified=verified, actual_price=actual_price, name=name, img_link=img_link)
+        artwork = Artwork(id=id, uid=uid, verified=verified, actual_price=actual_price, name=name, img_link=img_link)
         db.session.add(artwork)
         db.session.commit()
     except Exception as e:
@@ -68,15 +72,36 @@ def main():
             artworks = seed_data["artworks"]
             verif_votes = seed_data["verif_votes"]
             # user creation
-            for user in users:
-                add_user(email=user["email"], first_name=user["first_name"], last_name=user["last_name"])
+            for i in range(len(users)):
+                user = users[i]
+                add_user(id=i+1,email=user["email"], first_name=user["first_name"], last_name=user["last_name"])
             # artwork creation
-            for artwork in artworks:
-                add_artwork(uid=artwork["uid"], verified=artwork["verified"], actual_price=artwork["actual_price"], name=artwork["name"], img_link=artwork["img_link"])
+            for i in range(len(artworks)):
+                artwork = artworks[i]
+                add_artwork(id=i+1, uid=artwork["uid"], verified=artwork["verified"], actual_price=artwork["actual_price"], name=artwork["name"], img_link=artwork["img_link"])
             # verif_vote creation
+            date_format = "%Y/%m/%d/ %H:%M:%S.%f"
+            u_aw_combinations = []
+            for i in range(1,101):
+                for j in range(1,101):
+                    u_aw_combinations.append((i,j))
             for verif_vote in verif_votes:
-                voted_dt = dt.fromisoformat(verif_vote["voted_dt"])
-                add_verif_vote(uid = verif_vote["uid"], awid=verif_vote['awid'], worth=verif_vote['worth'], worth_price=verif_vote['worth_price'], voted_dt=voted_dt)
+                u_aw_combination = random.choice(u_aw_combinations)
+                u_aw_combinations.remove(u_aw_combination)
+                uid = u_aw_combination[0]
+                DemoService.increment_user_token(uid)
+                awid = u_aw_combination[1]
+                voted_dt_str = verif_vote["voted_dt"]
+                voted_dt = dt.strptime(voted_dt_str, date_format)
+                worth = True if verif_vote['worth'] == "TRUE" else False
+                worth_price = verif_vote['worth_price']
+                worth_price = None if worth_price == '' else worth_price
+                add_verif_vote(
+                    uid = uid, 
+                    awid = awid, 
+                    worth=worth, 
+                    worth_price=worth_price, 
+                    voted_dt=voted_dt)
 
     except Exception:
         traceback.print_exc()
