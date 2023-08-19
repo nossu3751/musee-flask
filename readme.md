@@ -8,7 +8,7 @@
 
 
 ## Todo
-[ ] create dataset from excel sheet
-[ ] setup db w the correct schema
+[x ] create dataset from excel sheet
+[x ] setup db w the correct schema
 [ ] upload dataset to db
 [ ] create views from tables uploaded
