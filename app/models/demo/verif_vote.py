@@ -13,3 +13,12 @@ class VerifVote(db.Model):
     def __repr__(self):
         return f'<VerifVote {self.id}>'
     
+    def to_dict(self):
+        return {
+            "id":self.id,
+            "uid":self.uid,
+            "awid":self.awid,
+            "worth":self.worth,
+            "worth_price":self.worth_price,
+            "voted_dt":self.voted_dt.isoformat() if self.voted_dt else None
+        }

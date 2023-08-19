@@ -2,6 +2,7 @@ from app.extensions import db
 from sqlalchemy import func, ForeignKey
 from sqlalchemy.sql import expression
 from sqlalchemy.orm import relationship
+from app.models.demo.user import User
 
 class Artwork(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -16,3 +17,15 @@ class Artwork(db.Model):
    
     def __repr__(self):
         return f'<Artwork {self.id}>'
+    
+    def to_dict(self):
+        return {
+            "id":self.id,
+            "uid":self.uid,
+            "user":self.user.to_dict(),
+            "verified":self.verified,
+            "uploaded_dt":self.uploaded_dt.isoformat() if self.uploaded_dt else None,
+            "actual_price":self.actual_price,
+            "name":self.name,
+            "img_link":self.img_link
+        }
