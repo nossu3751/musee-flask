@@ -7,15 +7,12 @@ class Artwork(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     uid = db.Column(db.Integer, ForeignKey('user.id'), nullable=False)
     user = relationship("User", back_populates="artworks")
-
     verified = db.Column(db.Boolean, server_default=expression.false(), nullable=False) 
     uploaded_dt = db.Column(db.DateTime, default=func.now())
     actual_price = db.Column(db.Integer, nullable=True)
     name = db.Column(db.String, nullable=False) 
     votes = relationship("VerifVote", backref="artwork")
-    
-    img_link = db.Column(db.String,nullable=False)
-    
-                         
+    img_link = db.Column(db.String, nullable=False) 
+   
     def __repr__(self):
         return f'<Artwork {self.id}>'
