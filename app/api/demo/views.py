@@ -6,7 +6,7 @@ demo_blueprint = Blueprint('demo', __name__, url_prefix='/api/demo')
 
 @demo_blueprint.route("/", methods=["GET"])
 def hello_world():
-    return jsonify("hello")
+    return jsonify("hello world")
 
 @demo_blueprint.route("/users/", methods=["GET"])
 def get_users():
