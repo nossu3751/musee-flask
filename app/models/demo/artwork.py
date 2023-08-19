@@ -12,6 +12,7 @@ class Artwork(db.Model):
     actual_price = db.Column(db.Integer, nullable=True)
     name = db.Column(db.String, nullable=False) 
     votes = relationship("VerifVote", backref="artwork")
+    img_link = db.Column(db.String, nullable=False) 
    
     def __repr__(self):
         return f'<Artwork {self.id}>'
