@@ -1,4 +1,5 @@
 import sys
+from datetime import datetime as dt
 sys.path.append(f'{sys.path[0]}/../..')
 
 import json, traceback
@@ -45,9 +46,9 @@ def add_artwork(uid, verified, actual_price, name, img_link):
         db.session.rollback()
         traceback.print_exc()
 
-def add_vote(uid, awid, worth, worth_price):
+def add_verif_vote(uid, awid, worth, worth_price, voted_dt):
     try:
-        verif_vote = VerifVote(uid=uid, awid=awid, worth=worth, worth_price=worth_price)
+        verif_vote = VerifVote(uid=uid, awid=awid, worth=worth, worth_price=worth_price, voted_dt=voted_dt)
         db.session.add(verif_vote)
         db.session.commit()
     except Exception as e:
@@ -65,10 +66,18 @@ def main():
             delete_all()
             users = seed_data["users"]
             artworks = seed_data["artworks"]
+            verif_votes = seed_data["verif_votes"]
+            # user creation
             for user in users:
                 add_user(email=user["email"], first_name=user["first_name"], last_name=user["last_name"])
+            # artwork creation
             for artwork in artworks:
                 add_artwork(uid=artwork["uid"], verified=artwork["verified"], actual_price=artwork["actual_price"], name=artwork["name"], img_link=artwork["img_link"])
+            # verif_vote creation
+            for verif_vote in verif_votes:
+                voted_dt = dt.fromisoformat(verif_vote["voted_dt"])
+                add_verif_vote(uid = verif_vote["uid"], awid=verif_vote['awid'], worth=verif_vote['worth'], worth_price=verif_vote['worth_price'], voted_dt=voted_dt)
+
     except Exception:
         traceback.print_exc()
 
