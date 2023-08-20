@@ -4,7 +4,8 @@ from app.api.demo.exceptions import *
 from app.models.demo.user import User
 from app.models.demo.artwork import Artwork
 from app.models.demo.verif_vote import VerifVote
-from sqlalchemy import select, update
+from sqlalchemy import and_, select, update
+import statistics
 
 class DemoService:
     @staticmethod
@@ -63,12 +64,26 @@ class DemoService:
         #todo: need to take care of edge care where user skips the worth price inputting
         stmt = (
             select(VerifVote.worth_price).
-            where(VerifVote.awid == awid)
+            where((VerifVote.awid == awid) & (VerifVote.worth_price != None))
+            # where((VerifVote.awid == awid))
         )
         
-        prices=db.session.execute(stmt).scalar()
-        print(prices[0], type(prices), type([prices[0]]))
-        return sum(prices)/len(prices)
+        prices=db.session.execute(stmt).scalars()
+        # print(prices[0], type(prices), type([prices[0]]))
+        return statistics.mean(prices)
+    
+    @staticmethod
+    def get_worth_prices(awid):
+        #todo: need to take care of edge care where user skips the worth price inputting
+        stmt = (
+            select(VerifVote.worth_price).
+            where((VerifVote.awid == awid) & (VerifVote.worth_price != None))
+            # where((VerifVote.awid == awid))
+        )
+        
+        prices=db.session.execute(stmt).scalars().all()
+        # print(prices[0], type(prices), type([prices[0]]))
+        return prices
     
 
 
