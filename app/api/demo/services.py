@@ -28,25 +28,24 @@ class DemoService:
         return db.session.execute(stmt).scalar_one_or_none()
     
     @staticmethod
-    def increment_user_token(id):
+    def increment_user_token(id, amount = 1):
         stmt = (
             update(User).
             where(User.id == id).
-            values(tokens=User.tokens + 1)
+            values(tokens=User.tokens + amount)
         )
         db.session.execute(stmt)
         db.session.commit()
 
     @staticmethod
-    def decrement_user_token(id):
+    def decrement_user_token(id, amount = 1):
         stmt = (
             update(User).
             where(User.id == id).
-            values(tokens=User.tokens - 1)
+            values(tokens=User.tokens - amount)
         )
         db.session.execute(stmt)
         db.session.commit()
-   
 
     
 
