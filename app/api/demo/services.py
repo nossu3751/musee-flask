@@ -60,6 +60,7 @@ class DemoService:
     
     @staticmethod
     def get_avg_price(awid):
+        #todo: need to take care of edge care where user skips the worth price inputting
         stmt = (
             select(VerifVote.worth_price).
             where(VerifVote.awid == awid)
