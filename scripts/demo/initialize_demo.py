@@ -79,12 +79,14 @@ def main():
             for i in range(len(artworks)):
                 artwork = artworks[i]
                 add_artwork(id=i+1, uid=artwork["uid"], verified=artwork["verified"], actual_price=artwork["actual_price"], name=artwork["name"], img_link=artwork["img_link"])
+            
             # verif_vote creation
             date_format = "%Y/%m/%d %H:%M:%S.%f"
             u_aw_combinations = []
             for i in range(1,101):
                 for j in range(1,101):
                     u_aw_combinations.append((i,j))
+
             for verif_vote in verif_votes:
                 u_aw_combination = random.choice(u_aw_combinations)
                 u_aw_combinations.remove(u_aw_combination)

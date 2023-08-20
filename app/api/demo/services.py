@@ -47,6 +47,31 @@ class DemoService:
         db.session.execute(stmt)
         db.session.commit()
 
+    @staticmethod
+    def update_aw_verif_state(id, state):
+        stmt = (
+            update(Artwork).
+            where(Artwork.id == id).
+            values(verified = state)
+        )
+        db.session.execute(stmt)
+        db.session.commit()
+
     
+    @staticmethod
+    def get_avg_price(awid):
+        stmt = (
+            select(VerifVote.worth_price).
+            where(VerifVote.awid == awid)
+        )
+        
+        prices=db.session.execute(stmt).scalar()
+        print(prices[0], type(prices), type([prices[0]]))
+        return sum(prices)/len(prices)
+    
+
+
+
+
 
 
