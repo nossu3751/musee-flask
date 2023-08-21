@@ -61,7 +61,8 @@ def add_verif_vote(uid, awid, worth, worth_price, voted_dt):
 
 def main():
     seed_data = {}
-    with open("./seed_data.json") as f:
+    print(sys.path[0])
+    with open("scripts/demo/seed_data.json") as f:
         seed_data = json.load(f)
     try:
         app = create_app()
@@ -81,7 +82,7 @@ def main():
                 add_artwork(id=i+1, uid=artwork["uid"], verified=artwork["verified"], actual_price=artwork["actual_price"], name=artwork["name"], img_link=artwork["img_link"])
             
             # verif_vote creation
-            date_format = "%Y/%m/%d %H:%M:%S.%f"
+            date_format = "%Y/%m/%d/ %H:%M:%S.%f"
             u_aw_combinations = []
             for i in range(1,101):
                 for j in range(1,101):
