@@ -48,7 +48,28 @@ def get_avg_price(aw):
         price = DemoService.get_avg_price(aw)
         return jsonify(price), 200
     except Exception:
-        return jsonify(traceback.format_exc())
+        return jsonify(traceback.format_exc()), 500
+    
+@demo_blueprint.route("artworks/vote", methods=["PUT"])
+def vote():
+    try:
+        res = request.json
+        uid = res["uid"]
+        awid = res["awid"]
+        worth = res["worth"]
+        voted = DemoService.vote(uid, awid, worth)
+        if not voted:
+            return jsonify(traceback.format_exc()), 409
+        vote_count = DemoService.get_aw_verif_votes_count(awid)
+        positive_count = DemoService.get_positive_verif_votes_count(awid)
+        if positive_count >= 25:
+            DemoService.update_aw_verif_state(awid, True)
+        elif vote_count >= 100:
+            DemoService.delete_artwork(awid)
+        return jsonify("Success"), 200
+    except Exception:
+        return jsonify(traceback.format_exc()), 500
+
     
 
 @demo_blueprint.route("artworks/<aw>/get_worth_prices/", methods=["GET"])

@@ -1,6 +1,6 @@
 import random
 import sys
-from datetime import datetime as dt
+from datetime import datetime as dt, timedelta
 sys.path.append(f'{sys.path[0]}/../..')
 
 import json, traceback
@@ -41,9 +41,9 @@ def add_user(id, email, first_name, last_name):
         db.session.rollback()
         traceback.print_exc()
 
-def add_artwork(id, uid, verified, actual_price, name, img_link):
+def add_artwork(id, uid, verified, actual_price, name, img_link, verified_dt):
     try:
-        artwork = Artwork(id=id, uid=uid, verified=verified, actual_price=actual_price, name=name, img_link=img_link)
+        artwork = Artwork(id=id, uid=uid, verified=verified, actual_price=actual_price, name=name, img_link=img_link, verified_dt=verified_dt)
         db.session.add(artwork)
         db.session.commit()
     except Exception as e:
@@ -79,7 +79,9 @@ def main():
             # artwork creation
             for i in range(len(artworks)):
                 artwork = artworks[i]
-                add_artwork(id=i+1, uid=artwork["uid"], verified=artwork["verified"], actual_price=artwork["actual_price"], name=artwork["name"], img_link=artwork["img_link"])
+                verified = artwork["verified"]
+                verified_dt = dt.now() -  timedelta(30) if verified else None
+                add_artwork(id=i+1, uid=artwork["uid"], verified=verified, actual_price=artwork["actual_price"], name=artwork["name"], img_link=artwork["img_link"], verified_dt=verified_dt)
             
             # verif_vote creation
             date_format = "%Y/%m/%d/ %H:%M:%S.%f"

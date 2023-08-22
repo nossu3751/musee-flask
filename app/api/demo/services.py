@@ -47,8 +47,38 @@ class DemoService:
         return db.session.execute(stmt).scalars()
     
     @staticmethod
+    def get_aw_verif_votes(awid):
+        stmt = select(VerifVote).filter(VerifVote.awid == awid)
+        return db.session.execute(stmt).scalars().all()
+    
+    @staticmethod
+    def get_aw_verif_votes_count(awid):
+        return len(DemoService.get_aw_verif_votes(awid))
+    
+    @staticmethod
+    def get_positive_verif_votes(awid):
+        stmt = select(VerifVote).filter(VerifVote.awid == awid, VerifVote.worth == True)
+        return db.session.execute(stmt).scalars().all()
+    
+    @staticmethod
+    def get_positive_verif_votes_count(awid):
+        return len(DemoService.get_positive_verif_votes(awid))
+    
+    @staticmethod
+    def delete_artwork(awid):
+        artwork = DemoService.get_artwork(awid)
+        if artwork:
+            db.session.delete(artwork)
+            db.session.commit()
+    
+    @staticmethod
     def get_user(id):
         stmt = select(User).where(User.id == id)
+        return db.session.execute(stmt).scalar_one_or_none()
+    
+    @staticmethod
+    def get_artwork(id):
+        stmt = select(Artwork).where(Artwork.id == id)
         return db.session.execute(stmt).scalar_one_or_none()
     
     @staticmethod
@@ -70,6 +100,19 @@ class DemoService:
         )
         db.session.execute(stmt)
         db.session.commit()
+
+
+    @staticmethod
+    def vote(uid, awid, worth):
+        try:
+            verif_vote = VerifVote(worth=worth, uid=uid, awid=awid)
+            db.session.add(verif_vote)
+            db.session.commit()
+            return True
+        except Exception:
+            traceback.print_exc()
+            db.session.rollback()
+            return False
 
     @staticmethod
     def update_aw_verif_state(id, state):
