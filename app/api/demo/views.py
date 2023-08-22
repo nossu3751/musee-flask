@@ -13,9 +13,20 @@ def get_users():
     users = DemoService.get_users()
     return jsonify([user.to_dict() for user in users])
 
+@demo_blueprint.route("/users/<id>", methods=["GET"])
+def get_user(id):
+    user = DemoService.get_user(id)
+    if not user:
+        abort(404)
+    return jsonify(user.to_dict()), 200
+
 @demo_blueprint.route("/artworks/", methods=["GET"])
 def get_artworks():
-    artworks = DemoService.get_artworks()
+    uid = request.args.get("uid")
+    if uid == None:   
+        artworks = DemoService.get_artworks()
+    else:
+        artworks = DemoService.get_user(uid).artworks
     return jsonify([artwork.to_dict() for artwork in artworks])
 
 @demo_blueprint.route("/random_artworks/",methods=["GET"])
