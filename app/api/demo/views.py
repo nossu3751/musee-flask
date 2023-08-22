@@ -18,6 +18,14 @@ def get_artworks():
     artworks = DemoService.get_artworks()
     return jsonify([artwork.to_dict() for artwork in artworks])
 
+@demo_blueprint.route("/random_artworks/",methods=["GET"])
+def get_random_artworks():
+    count = request.args.get("count")
+    uid = request.args.get("uid")
+    random_artworks = DemoService.get_random_artworks(uid, count)
+    return jsonify([aw.to_dict() for aw in random_artworks])
+
+
 @demo_blueprint.route("/verif_votes/", methods=["GET"])
 def get_verif_votes():
     verif_votes = DemoService.get_verif_votes()

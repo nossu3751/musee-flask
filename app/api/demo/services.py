@@ -4,7 +4,7 @@ from app.api.demo.exceptions import *
 from app.models.demo.user import User
 from app.models.demo.artwork import Artwork
 from app.models.demo.verif_vote import VerifVote
-from sqlalchemy import and_, select, update
+from sqlalchemy import and_, func, select, update
 import statistics
 
 class DemoService:
@@ -17,6 +17,27 @@ class DemoService:
     def get_artworks():
         stmt = select(Artwork).order_by(Artwork.uploaded_dt.asc())
         return db.session.execute(stmt).scalars()
+    
+    @staticmethod
+    def get_voted_artworks(uid):
+        voted_awids = db.session.query(VerifVote.awid).filter(VerifVote.uid == uid).all()
+        voted_awids = [item[0] for item in voted_awids]
+        return voted_awids
+    
+    @staticmethod
+    def get_random_artworks(uid, count:int = 5):
+        try:
+            if count == None:
+                count = 5
+            else: 
+                count = int(count)
+        except Exception:
+            count = 5
+        random_artworks = db.session.query(Artwork).filter(
+            Artwork.verified == False,
+            Artwork.id.notin_(DemoService.get_voted_artworks(uid))
+        ).order_by(func.random()).limit(count)
+        return random_artworks
     
     @staticmethod
     def get_verif_votes():
