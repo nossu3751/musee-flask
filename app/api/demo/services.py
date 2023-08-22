@@ -33,9 +33,11 @@ class DemoService:
                 count = int(count)
         except Exception:
             count = 5
+
         random_artworks = db.session.query(Artwork).filter(
             Artwork.verified == False,
-            Artwork.id.notin_(DemoService.get_voted_artworks(uid))
+            Artwork.id.notin_(DemoService.get_voted_artworks(uid)),
+            Artwork.uid != uid
         ).order_by(func.random()).limit(count)
         return random_artworks
     
