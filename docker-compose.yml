@@ -1,0 +1,37 @@
+version: '3.8'
+services:
+    web:
+        build: .
+        image: python:3.11.4
+        container_name: musee-flask
+        volumes:
+            - .:/usr/src/myapp
+        working_dir: /usr/src/myapp
+        ports:
+            - "5000:5000"
+        command: python run.py
+        environment:
+            DATABASE_URL: "postgresql://postgres:password@db:5432/musee-db"
+        depends_on:
+            - db
+    db:
+        image: postgres:15
+        restart: always
+        container_name: musee-postgres
+        environment:
+            POSTGRES_PASSWORD: 789745
+            POSTGRES_DB: musee-db
+        volumes:
+            - postgres_data:/var/lib/postgresql/data
+    pgadmin:
+        container_name: pga_container
+        image: dpage/pgadmin4:latest
+        restart: always
+        environment:
+            PGADMIN_DEFAULT_EMAIL: yahoyoungho@gmail.com
+            PGADMIN_DEFAULT_PASSWORD: "789745"
+        ports:
+        - 5050:80
+
+volumes:
+  postgres_data:
