@@ -54,6 +54,7 @@ def get_avg_price(aw):
 def vote():
     try:
         res = request.json
+        print(res)
         uid = res["uid"]
         awid = res["awid"]
         worth = res["worth"]
@@ -68,6 +69,7 @@ def vote():
             DemoService.delete_artwork(awid)
         return jsonify("Success"), 200
     except Exception:
+        traceback.print_exc()
         return jsonify(traceback.format_exc()), 500
 
     
