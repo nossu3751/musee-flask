@@ -108,7 +108,7 @@ def main():
                     u_aw_combinations.append((uid,aw, False))
 
             # inputting demo data for certificaiton completed
-            for aw in range(161,181):
+            for aw in range(161,337):
                 for uid in range(1,76):
                     u_aw_combinations.append((uid,aw, True))
                 for uid in range(76,100):
