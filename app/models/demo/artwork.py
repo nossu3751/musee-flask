@@ -8,7 +8,8 @@ class Artwork(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     uid = db.Column(db.Integer, ForeignKey('user.id'), nullable=False)
     user = relationship("User", back_populates="artworks")
-    verified = db.Column(db.Boolean, server_default=expression.false(), nullable=False) 
+    verified = db.Column(db.Boolean, server_default=expression.false(), nullable=False)
+    certified = db.Column(db.Boolean, server_default=expression.false(), nullable=False) 
     uploaded_dt = db.Column(db.DateTime, default=func.now())
     verified_dt = db.Column(db.DateTime, nullable=True)
     actual_price = db.Column(db.Integer, nullable=True)
@@ -25,6 +26,8 @@ class Artwork(db.Model):
             "uid":self.uid,
             "user":self.user.to_dict(),
             "verified":self.verified,
+            "verified_dt":self.verified_dt,
+            "certified":self.certified,
             "uploaded_dt":self.uploaded_dt.isoformat() if self.uploaded_dt else None,
             "actual_price":self.actual_price,
             "name":self.name,

@@ -89,7 +89,7 @@ def main():
             for i in range(1,101):
                 for j in range(1,101):
                     u_aw_combinations.append((i,j))
-
+            
             for verif_vote in verif_votes:
                 u_aw_combination = random.choice(u_aw_combinations)
                 u_aw_combinations.remove(u_aw_combination)

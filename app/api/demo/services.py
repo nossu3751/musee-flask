@@ -15,7 +15,7 @@ class DemoService:
     
     @staticmethod
     def get_artworks():
-        stmt = select(Artwork).order_by(Artwork.uploaded_dt.asc())
+        stmt = select(Artwork).order_by(Artwork.verified_dt.asc())
         return db.session.execute(stmt).scalars()
     
     @staticmethod
@@ -107,6 +107,17 @@ class DemoService:
         try:
             verif_vote = VerifVote(worth=worth, uid=uid, awid=awid)
             db.session.add(verif_vote)
+
+            vote_count = DemoService.get_aw_verif_votes_count(awid)
+            positive_count = DemoService.get_positive_verif_votes_count(awid)
+
+            if positive_count >= 25:
+                DemoService.update_aw_verif_state(awid, True)
+                if positive_count >= 75:
+                    DemoService.update_aw_certified_state(awid, True)
+            elif vote_count >= 100:
+                DemoService.delete_artwork(awid)
+
             db.session.commit()
             return True
         except Exception:
@@ -120,6 +131,16 @@ class DemoService:
             update(Artwork).
             where(Artwork.id == id).
             values(verified = state)
+        )
+        db.session.execute(stmt)
+        db.session.commit()
+
+    @staticmethod
+    def update_aw_certified_state(id, state):
+        stmt = (
+            update(Artwork).
+            where(Artwork.id == id).
+            values(certified = state)
         )
         db.session.execute(stmt)
         db.session.commit()
