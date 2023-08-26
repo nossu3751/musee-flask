@@ -111,12 +111,14 @@ class DemoService:
             vote_count = DemoService.get_aw_verif_votes_count(awid)
             positive_count = DemoService.get_positive_verif_votes_count(awid)
 
-            if positive_count >= 25:
-                DemoService.update_aw_verif_state(awid, True)
-                if positive_count >= 75:
-                    DemoService.update_aw_certified_state(awid, True)
-            elif vote_count >= 100:
-                DemoService.delete_artwork(awid)
+            if vote_count >= 100:
+
+                if positive_count >= 25:
+                    DemoService.update_aw_verif_state(awid, True)
+                    if positive_count >= 75:
+                        DemoService.update_aw_certified_state(awid, True)
+                else:
+                    DemoService.delete_artwork(awid)
 
             db.session.commit()
             return True

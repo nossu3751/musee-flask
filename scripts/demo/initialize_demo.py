@@ -85,6 +85,7 @@ def main():
             
             # verif_vote creation
             date_format = "%Y/%m/%d/ %H:%M:%S.%f"
+            # inputting demo data for verification
             u_aw_combinations = []
             for aw in range(1,101):
                 for uid in range(1,25):
@@ -92,6 +93,29 @@ def main():
                 for uid in range(25,100):
                     u_aw_combinations.append((uid,aw, False))
 
+            # inputting demo data for certificaiton
+            for aw in range(101,131):
+                for uid in range(1,75):
+                    u_aw_combinations.append((uid,aw, True))
+                for uid in range(75,100):
+                    u_aw_combinations.append((uid,aw, False))
+
+            # inputting demo data for verification completed
+            for aw in range(131,161):
+                for uid in range(1,26):
+                    u_aw_combinations.append((uid,aw, True))
+                for uid in range(26,100):
+                    u_aw_combinations.append((uid,aw, False))
+
+            # inputting demo data for certificaiton completed
+            for aw in range(161,181):
+                for uid in range(1,76):
+                    u_aw_combinations.append((uid,aw, True))
+                for uid in range(76,100):
+                    u_aw_combinations.append((uid,aw, False))
+
+            
+                
             for u_aw_combination in u_aw_combinations:
                 voted_dt = dt.now()
                 uid,awid,worth = u_aw_combination[0],u_aw_combination[1], u_aw_combination[2]
