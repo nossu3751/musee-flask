@@ -86,28 +86,19 @@ def main():
             # verif_vote creation
             date_format = "%Y/%m/%d/ %H:%M:%S.%f"
             u_aw_combinations = []
-            for i in range(1,101):
-                for j in range(1,101):
-                    u_aw_combinations.append((i,j))
-            
-            for verif_vote in verif_votes:
-                u_aw_combination = random.choice(u_aw_combinations)
-                u_aw_combinations.remove(u_aw_combination)
-                uid = u_aw_combination[0]
-                DemoService.increment_user_token(uid)
-                awid = u_aw_combination[1]
-                voted_dt_str = verif_vote["voted_dt"]
-                voted_dt = dt.strptime(voted_dt_str, date_format)
-                worth = True if verif_vote['worth'] == "TRUE" else False
-                worth_price = verif_vote['worth_price']
-                worth_price = None if worth_price == '' else worth_price
-                add_verif_vote(
-                    uid = uid, 
-                    awid = awid, 
-                    worth=worth, 
-                    worth_price=worth_price, 
-                    voted_dt=voted_dt)
+            for aw in range(1,101):
+                for uid in range(1,25):
+                    u_aw_combinations.append((uid,aw, True))
+                for uid in range(25,100):
+                    u_aw_combinations.append((uid,aw, False))
 
+            for u_aw_combination in u_aw_combinations:
+                voted_dt = dt.now()
+                uid,awid,worth = u_aw_combination[0],u_aw_combination[1], u_aw_combination[2]
+                worth_price = None if worth == False else random.randint(10,2000)
+                add_verif_vote(uid=uid, awid = awid, worth = worth, worth_price = worth_price, voted_dt = voted_dt)
+                DemoService.increment_user_token(uid)
+                
     except Exception:
         traceback.print_exc()
 
