@@ -16,9 +16,16 @@ class Artwork(db.Model):
     name = db.Column(db.String, nullable=False) 
     votes = relationship("VerifVote", backref="artwork", cascade="all,delete")
     img_link = db.Column(db.String, nullable=False)
-    # description = db.Column(db.String, nullable=True)
-    # awSize = db.Column(db.String, nullable=True)
-   
+    
+    description = db.Column(db.String, nullable=True)
+    awSize_width = db.Column(db.Integer, nullable=True)
+    awSize_height = db.Column(db.Integer, nullable=True)
+
+    aw_start_date = db.Column(db.DateTime, nullable=True)
+    aw_end_date = db.Column(db.DateTime, nullable=True)
+
+    aw_pricing_option = db.Column(db.Integer, nullable=True)
+
     def __repr__(self):
         return f'<Artwork {self.id}>'
     
@@ -33,5 +40,11 @@ class Artwork(db.Model):
             "uploaded_dt":self.uploaded_dt.isoformat() if self.uploaded_dt else None,
             "actual_price":self.actual_price,
             "name":self.name,
-            "img_link":self.img_link
+            "img_link":self.img_link,
+            "description":self.description,
+            "awSize_width":self.awSize_width,
+            "awSize_height":self.awSize_height,
+            "aw_start_date":self.aw_start_date,
+            "aw_end_date":self.aw_end_date,
+            "aw_pricing_option":self.aw_pricing_option
         }

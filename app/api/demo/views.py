@@ -33,7 +33,6 @@ def upload_image():
         return {'message': 'File uploaded successfully'}, 200
     else:
         return {'error': 'File type not allowed'}, 400
-    
 
 @demo_blueprint.route("/users/", methods=["GET"])
 def get_users():
@@ -62,7 +61,7 @@ def get_artwork_details():
     if awid == None:
         abort(404)
     artwork_details = DemoService.get_artwork(awid)
-    return jsonify(artwork_details)
+    return jsonify(artwork_details.to_dict())
 
 
 
