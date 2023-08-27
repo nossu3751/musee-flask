@@ -56,6 +56,17 @@ def get_artworks():
         artworks = DemoService.get_user(uid).artworks
     return jsonify([artwork.to_dict() for artwork in artworks])
 
+@demo_blueprint.route('/artwork_details/', methods=['GET'])
+def get_artwork_details():
+    awid = request.args.get('awid')
+    if awid == None:
+        abort(404)
+    artwork_details = DemoService.get_artwork(awid)
+    return jsonify(artwork_details)
+
+
+
+
 @demo_blueprint.route("/random_artworks/",methods=["GET"])
 def get_random_artworks():
     count = request.args.get("count")
